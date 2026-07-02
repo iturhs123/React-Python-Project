@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Telusko Trac{% endblock %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        .topbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .brand { display: flex; align-items: center; gap: 0.5rem; }
+        .brand h1 { font-size: 1.5rem; color: #fff; }
+        .brand-badge { font-size: 1.5rem; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .card {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .card h2 { margin-bottom: 1rem; color: #fff; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        th { color: #aaa; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
+        td { color: #ddd; }
+        .price-cell { color: #4ecdc4; font-weight: 600; }
+        .qty-badge {
+            background: rgba(78,205,196,0.15); color: #4ecdc4;
+            padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.85rem;
+        }
+        .btn {
+            padding: 0.5rem 1rem; border: none; border-radius: 8px;
+            cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
+        }
+        .btn-primary { background: #4ecdc4; color: #000; }
+        .btn-primary:hover { background: #45b7af; }
+        .btn-edit { background: rgba(78,205,196,0.15); color: #4ecdc4; margin-right: 0.5rem; }
+        .btn-delete { background: rgba(255,107,107,0.15); color: #ff6b6b; }
+        nav { display: flex; gap: 1rem; }
+        nav a { color: #4ecdc4; text-decoration: none; font-weight: 500; }
+        nav a:hover { text-decoration: underline; }
+        .success-msg { background: rgba(78,205,196,0.15); color: #4ecdc4; padding: 0.75rem; border-radius: 8px; margin-top: 1rem; }
+        .error-msg { background: rgba(255,107,107,0.15); color: #ff6b6b; padding: 0.75rem; border-radius: 8px; margin-top: 1rem; }
+        .product-form input {
+            width: 100%; padding: 0.6rem; margin-bottom: 0.75rem;
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px; color: #fff; font-size: 0.95rem;
+        }
+        .product-form input::placeholder { color: #888; }
+        .form-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .stats { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .chip { background: rgba(78,205,196,0.15); color: #4ecdc4; padding: 0.3rem 0.8rem; border-radius: 12px; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-badge">📦</span>
+            <h1>Telusko Trac</h1>
+        </div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/products-page">Products</a>
+            <a href="/add-product-page">Add Product</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        {% if message %}
+        <div class="success-msg">{{ message }}</div>
+        {% endif %}
+        {% if error %}
+        <div class="error-msg">{{ error }}</div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

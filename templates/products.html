@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Products - Telusko Trac{% endblock %}
+
+{% block content %}
+<div class="stats">
+    <div class="chip">Total: {{ products|length }}</div>
+    <a href="/add-product-page" class="btn btn-primary" style="text-decoration: none;">+ Add Product</a>
+</div>
+
+<div class="card">
+    <h2>All Products</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.description }}</td>
+                <td class="price-cell">${{ "%.2f"|format(product.price) }}</td>
+                <td><span class="qty-badge">{{ product.quantity }}</span></td>
+                <td>
+                    <a href="/edit-product-page/{{ product.id }}" class="btn btn-edit" style="text-decoration: none;">Edit</a>
+                    <form method="post" action="/delete-product/{{ product.id }}" style="display: inline;">
+                        <button type="submit" class="btn btn-delete" onclick="return confirm('Delete this product?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            {% if not products %}
+            <tr>
+                <td colspan="6" style="text-align: center; color: #888; padding: 2rem;">No products found.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

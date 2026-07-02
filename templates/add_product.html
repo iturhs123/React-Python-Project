@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Add Product - Telusko Trac{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 500px;">
+    <h2>Add New Product</h2>
+    <form method="post" action="/add-product-page" class="product-form">
+        <input type="number" name="id" placeholder="ID" required />
+        <input type="text" name="name" placeholder="Name" required />
+        <input type="text" name="description" placeholder="Description" required />
+        <input type="number" name="price" placeholder="Price" step="0.01" required />
+        <input type="number" name="quantity" placeholder="Quantity" required />
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Add Product</button>
+            <a href="/payroll_notification" class="btn btn-edit" style="text-decoration: none;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

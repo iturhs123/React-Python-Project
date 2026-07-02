@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Product - Telusko Trac{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 500px;">
+    <h2>Edit Product #{{ product.id }}</h2>
+    <form method="post" action="/edit-product-page/{{ product.id }}" class="product-form">
+        <input type="number" name="id" value="{{ product.id }}" readonly style="opacity: 0.5;" />
+        <input type="text" name="name" value="{{ product.name }}" placeholder="Name" required />
+        <input type="text" name="description" value="{{ product.description }}" placeholder="Description" required />
+        <input type="number" name="price" value="{{ product.price }}" placeholder="Price" step="0.01" required />
+        <input type="number" name="quantity" value="{{ product.quantity }}" placeholder="Quantity" required />
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Update Product</button>
+            <a href="/products-page" class="btn btn-edit" style="text-decoration: none;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

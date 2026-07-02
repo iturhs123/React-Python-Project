@@ -1,0 +1,26 @@
+we want to download fastapi for perticular forlder, so we 'll create vertual environt
+1- python -m venv myenv
+2. we have to activate it first using powershell
+now will do - pip install fastapi uvicorn
+REST api - representation state transfer (eg. json easy to represent) [api - application program interface]
+CRUD - create , read, update, delete
+pydantic for validation
+in fast api we get swagger on /docs
+RDBMS - postgres sql
+to install sql alchey for postgres-   pip install sqlalchemy psycopg2
+
+for jinja template
+Now let me install python-multipart which is needed for Form(...) parsing:
+
+SessionLocal= sessionmaker(autocommit=False, autoflush=False, bind=engine)
+autocommit for initial commit it should be false
+engine helps you to connect with the database
+autoflush setting is use when any new session created
+db_url = "postgresql://username:password@localhost:5432/appname"
+now on main.py will do the db connection using session
+will write the db.query not the real query but the sqlAlchemy orm feature 
+now we have to create the model class from the database suppose models.py willbe database_models.py
+we have to mention in main to create the table in postgres like this  database_models.Base.metadata.create_all(bind = engine)
+import psycopg2; conn = psycopg2.connect(host='localhost', port=5432, user='postgres', 
+password='zreddit#@1357', dbname='postgres');
+ conn.autocommit = True; cur = conn.cursor(); cur.execute('CREATE DATABASE telusco'); print('Database telusco created successfully'); conn.close()

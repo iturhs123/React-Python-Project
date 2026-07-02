@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Payroll Notification</title>
+<style>
+body{
+    margin:0;
+    padding:0;
+    background:#0a0a0a;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container{
+    width:590px;
+    margin:auto;
+    background:#ffffff;
+}
+
+.header{
+    background:#000028;
+    padding:15px;
+    color:white;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.banner{
+    background:#000028;
+    text-align:center;
+}
+
+.title-section{
+    background:#000028;
+    color:#FFFFFF;
+    padding:20px;
+   
+}
+
+.title{
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.date{
+    margin-top:10px;
+    font-size:16px;
+    font-weight: 400;
+}
+
+.button{
+    display:inline-block;
+    margin-top:20px;
+    padding:8px 12px;
+    background:#00CCCC;
+    color:#000028;
+    text-decoration:none;
+    font-size: 14px;
+    font-weight:700;
+}
+
+.content{
+    background:#FFFFFF;
+    padding:20px;
+    color:#333;
+    height: 223px;
+    font-size: 12px;
+}
+
+.info-box{
+    margin-top:20px;
+    background:#F2F2F2;
+    padding:10px;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.info-table{
+    width:100%;
+    text-align:center;
+}
+
+.footer{
+    background:#000028;
+    color:white;
+    text-align:right;
+    padding:15px;
+    font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <img src="{{ banner_image_url }}" alt="Payroll Banner">
+    </div>
+
+    <!-- Banner -->
+    <div class="banner">
+        <img src="{{ banner_image_url }}" alt="Payroll Banner">
+    </div>
+
+    <!-- Title Section -->
+    <div class="title-section">
+        <div class="title">
+            Payroll True-North - Notification
+        </div>
+
+        <div class="date">
+            {{ date }}
+        </div>
+
+        <a class="button" href="{{ application_link }}">
+            Go to Application
+        </a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+        <p>Hi {{ user_name }},</p>
+
+        <p>
+            You have recently <b>{{ modified_entries }}</b> modified payroll entries in your profile
+            and <b>{{ pending_notifications }}</b> new notifications are pending to review.
+            Kindly Review ASAP.
+        </p>
+
+        <!-- Info Box -->
+        <div class="info-box">
+
+            <table class="info-table">
+                <tr>
+                    <td>Text - {{ text1 }}</td>
+                    <td>Text - {{ text2 }}</td>
+                    <td>Text - {{ text3 }}</td>
+                    <td>Text - {{ text4 }}</td>
+                </tr>
+            </table>
+
+        </div>
+
+        <p style="margin-top:30px;">
+            Best Regards,<br>
+            <b>Payroll Team</b>
+        </p>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        Restricted © Siemens AG, {{ year }}
+    </div>
+
+</div>
+
+</body>
+</html>
