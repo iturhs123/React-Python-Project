@@ -24,3 +24,8 @@ we have to mention in main to create the table in postgres like this  database_m
 import psycopg2; conn = psycopg2.connect(host='localhost', port=5432, user='postgres', 
 password='zreddit#@1357', dbname='postgres');
  conn.autocommit = True; cur = conn.cursor(); cur.execute('CREATE DATABASE telusco'); print('Database telusco created successfully'); conn.close()
+
+
+python3 -m venv venv
+shrusource venv/bin/activate
+python3 -m pip install -r requirements.txt
