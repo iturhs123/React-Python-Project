@@ -3,19 +3,25 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import SessionLocal, engine, Base
 from models import Product
 import database_models
+from app.routes.auth import router as auth_router
+from starlette.middleware.sessions import SessionMiddleware
+
 
 
 app = FastAPI()
-Base.metadata.create_all(bind=engine)
 
+app.add_middleware(SessionMiddleware, secret_key="SECRET_KEY")
 # CORS — allow React dev server to call the API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001"],
+    allow_origins=["http://localhost:3000", "http://localhost:3001","http://localhost:3000/Inventory"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
+Base.metadata.create_all(bind=engine)
 
 products = [Product(id=1, name="Product A", price=10.99, description="Description of Product A", quantity=10),
             Product(id=2, name="Product B", price=19.99, description="Description of Product B", quantity=5)]

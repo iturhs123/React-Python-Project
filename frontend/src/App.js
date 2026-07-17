@@ -2,13 +2,21 @@ import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import "./App.css";
 import TaglineSection from "./TaglineSection";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchProducts,
+
+  setError,
+  clearError,
+  updateProducts, addProducts
+} from "./redux/actions/productAction";
 
 const api = axios.create({
   baseURL: "http://localhost:8000/",
 });
 
 function App() {
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
   const [form, setForm] = useState({
     id: "",
     name: "",
@@ -16,13 +24,14 @@ function App() {
     price: "",
     quantity: "",
   });
+  const dispatch = useDispatch();
   const [editId, setEditId] = useState(null);
   const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+
   const [filter, setFilter] = useState("");
   const [sortField, setSortField] = useState("id");
   const [sortDirection, setSortDirection] = useState("asc");
+  const { products, loading, error } = useSelector((state) => state.product);
 
   // Auto-dismiss messages after 5 seconds
   useEffect(() => {
@@ -37,40 +46,45 @@ function App() {
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => {
-        setError("");
+        dispatch(clearError());
       }, 5000);
       return () => clearTimeout(timer);
     }
   }, [error]);
 
-  // Fetch all products
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get("/products");
-      setProducts(res.data);
-      setError("");
-    } catch (err) {
-      setError("Failed to fetch products");
-    }
-    setLoading(false);
-  };
+  // // Fetch all products
+  // const fetchProducts = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await api.get("/products");
+  //     setProducts(res.data);
+  //     setError("");
+  //     console.log("Products fetched:", res.data);
+  //   } catch (err) {
+  //     setError("Failed to fetch products");
+  //   }
+  //   setLoading(false);
+  // };
+
+  // useEffect(() => {
+  //   // Inline initial fetch to avoid referencing external deps
+  //   const run = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const res = await api.get("/products");
+  //       setProducts(res.data);
+  //       setError("");
+  //     } catch (err) {
+  //       setError("Failed to fetch products");
+  //     }
+  //     setLoading(false);
+  //   };
+  //   run();
+  // }, []);
 
   useEffect(() => {
-    // Inline initial fetch to avoid referencing external deps
-    const run = async () => {
-      setLoading(true);
-      try {
-        const res = await api.get("/products");
-        setProducts(res.data);
-        setError("");
-      } catch (err) {
-        setError("Failed to fetch products");
-      }
-      setLoading(false);
-    };
-    run();
-  }, []);
+    dispatch(fetchProducts())
+  }, [dispatch]);
 
   // Handle sorting
   const handleSort = (field) => {
@@ -84,23 +98,23 @@ function App() {
 
   // Derived list with filter and sorting
   const filteredProducts = useMemo(() => {
-    let filtered = products;
-    
+    let filtered = Array.isArray(products) ? [...products] : [];
+
     // Apply filter
     const q = filter.trim().toLowerCase();
     if (q) {
-      filtered = products.filter((p) =>
+      filtered = filtered.filter((p) =>
         String(p.id).includes(q) ||
         p.name?.toLowerCase().includes(q) ||
         p.description?.toLowerCase().includes(q)
       );
     }
-    
+
     // Apply sorting
     return filtered.sort((a, b) => {
       let aVal = a[sortField];
       let bVal = b[sortField];
-      
+
       // Handle numeric fields
       if (sortField === "id" || sortField === "price" || sortField === "quantity") {
         aVal = Number(aVal);
@@ -110,7 +124,7 @@ function App() {
         aVal = String(aVal).toLowerCase();
         bVal = String(bVal).toLowerCase();
       }
-      
+
       if (aVal < bVal) return sortDirection === "asc" ? -1 : 1;
       if (aVal > bVal) return sortDirection === "asc" ? 1 : -1;
       return 0;
@@ -131,33 +145,23 @@ function App() {
   // Create or update product
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setMessage("");
-    setError("");
+    dispatch(clearError());
+    console.log("Submit clicked", form);
+
     try {
       if (editId) {
-        await api.put(`/products/${editId}`, {
-          ...form,
-          id: Number(form.id),
-          price: Number(form.price),
-          quantity: Number(form.quantity),
-        });
+        await dispatch(updateProducts(editId, form));
         setMessage("Product updated successfully");
       } else {
-        await api.post("/products", {
-          ...form,
-          id: Number(form.id),
-          price: Number(form.price),
-          quantity: Number(form.quantity),
-        });
+        await dispatch(addProducts(form));
         setMessage("Product created successfully");
       }
       resetForm();
-      fetchProducts();
+      dispatch(fetchProducts());
     } catch (err) {
-      setError(err.response?.data?.detail || "Operation failed");
+      dispatch(setError(err.response?.data?.detail || "Operation failed"));
     }
-    setLoading(false);
   };
 
   // Edit product
@@ -171,25 +175,25 @@ function App() {
     });
     setEditId(product.id);
     setMessage("");
-    setError("");
+    dispatch(clearError());
   };
 
-  // Delete product
-  const handleDelete = async (id) => {
-    const ok = window.confirm("Delete this product?");
-    if (!ok) return;
-    setLoading(true);
-    setMessage("");
-    setError("");
-    try {
-      await api.delete(`/products/${id}`);
-      setMessage("Product deleted successfully");
-      fetchProducts();
-    } catch (err) {
-      setError("Delete failed");
-    }
-    setLoading(false);
-  };
+  // // Delete product
+  // const handleDelete = async (id) => {
+  //   const ok = window.confirm("Delete this product?");
+  //   if (!ok) return;
+  //   setLoading(true);
+  //   setMessage("");
+  //   setError("");
+  //   try {
+  //     await api.delete(`/products/${id}`);
+  //     setMessage("Product deleted successfully");
+  //     fetchProducts();
+  //   } catch (err) {
+  //     setError("Delete failed");
+  //   }
+  //   setLoading(false);
+  // };
 
   const currency = (n) =>
     typeof n === "number" ? n.toFixed(2) : Number(n || 0).toFixed(2);
@@ -199,7 +203,7 @@ function App() {
       <header className="topbar">
         <div className="brand">
           <span className="brand-badge">📦</span>
-          <h1>Telusko Trac</h1>
+          <h1>My List Trac</h1>
         </div>
         <div className="top-actions">
           <button className="btn btn-light" onClick={fetchProducts} disabled={loading}>
@@ -226,6 +230,7 @@ function App() {
             <h2>{editId ? "Edit Product" : "Add Product"}</h2>
             <form onSubmit={handleSubmit} className="product-form">
               <input
+                id="id"
                 type="number"
                 name="id"
                 placeholder="ID"
@@ -235,6 +240,7 @@ function App() {
                 disabled={!!editId}
               />
               <input
+                id="name"
                 type="text"
                 name="name"
                 placeholder="Name"
@@ -243,6 +249,7 @@ function App() {
                 required
               />
               <input
+                id="text"
                 type="text"
                 name="description"
                 placeholder="Description"
@@ -251,6 +258,7 @@ function App() {
                 required
               />
               <input
+                id="number"
                 type="number"
                 name="price"
                 placeholder="Price"
@@ -260,6 +268,7 @@ function App() {
                 step="0.01"
               />
               <input
+                id="quantity"
                 type="number"
                 name="quantity"
                 placeholder="Quantity"
@@ -289,8 +298,8 @@ function App() {
             {message && <div className="success-msg">{message}</div>}
             {error && <div className="error-msg">{error}</div>}
           </div>
-          
-          <TaglineSection />
+
+          {/* <TaglineSection /> */}
 
           <div className="card list-card">
             <h2>Products</h2>
@@ -301,26 +310,26 @@ function App() {
                 <table className="product-table">
                   <thead>
                     <tr>
-                      <th 
+                      <th
                         className={`sortable ${sortField === 'id' ? `sort-${sortDirection}` : ''}`}
                         onClick={() => handleSort('id')}
                       >
                         ID
                       </th>
-                      <th 
+                      <th
                         className={`sortable ${sortField === 'name' ? `sort-${sortDirection}` : ''}`}
                         onClick={() => handleSort('name')}
                       >
                         Name
                       </th>
                       <th>Description</th>
-                      <th 
+                      <th
                         className={`sortable ${sortField === 'price' ? `sort-${sortDirection}` : ''}`}
                         onClick={() => handleSort('price')}
                       >
                         Price
                       </th>
-                      <th 
+                      <th
                         className={`sortable ${sortField === 'quantity' ? `sort-${sortDirection}` : ''}`}
                         onClick={() => handleSort('quantity')}
                       >
