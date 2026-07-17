@@ -62,3 +62,4 @@ python -m pip install "passlib[bcrypt]"
 
 added line in setting.json to resolve the package issues
         "python.defaultInterpreterPath": "/Users/shrutigupta/Documents/python-FastApi-project/backend/venv/bin/python"
+
