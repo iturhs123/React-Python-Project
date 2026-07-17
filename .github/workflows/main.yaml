@@ -1,0 +1,15 @@
+name: ReactApp
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print Hello
+        run: echo "Hello GitHub Actions!"
